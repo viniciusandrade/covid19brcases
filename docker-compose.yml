@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  covid:
+    image: covid
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5000
