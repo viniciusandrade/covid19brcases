@@ -19,16 +19,29 @@ def index():
 
 @app.route('/brasil')
 def brazil():
-    # Fazendo a requisição para a API
-    request = requests.get('https://api.covid19.finspect.me/brcovid19/map')
+    # Fazendo a requisição para a API pra ter os dados da tabela
+    states_data_for_table = requests.get('https://api.covid19.finspect.me/brcovid19/map').json()
 
-    # Atribuindo o JSON recebido a uma variável
-    states_data = request.json()
+    # Fazendo a nova requisição para ter os casos por dia
+    daily_cases_data = requests.get('https://api.covid19.finspect.me/brcovid19/day').json()
+
+    cases_list = list()
+    dates_list = list()
+    
+    for daily_data in daily_cases_data:
+        cases_list.append(daily_data['qtd_confirmation'])
+        dates_list.append(daily_data['label'])
+
 
     # Pegando a data atual
     date = datetime.now().strftime(format="%d/%m/%Y")
 
-    return render_template('brazil.html', states=states_data, date=date)  
+    return render_template('brazil.html', 
+                        table_data=states_data_for_table, 
+                        date=date,
+                        cases_list=cases_list,
+                        dates_list=dates_list,
+                        )
 
 
 @app.route('/mundo')
