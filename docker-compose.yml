@@ -7,4 +7,5 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 5000
+      - 8000:8000
+    command: gunicorn --workers 3 --bind 0.0.0.0:5000 app:app --timeout 150 --log-level INFO
